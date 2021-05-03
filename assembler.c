@@ -5,7 +5,6 @@
 #include "parser.c"
 
 // Scan through and create symbol table. 
-// TESTING
 int first_pass() {
     char line[1000];
     char symbol[1000];
@@ -35,7 +34,6 @@ int second_pass() {
             printf("%s\n", binline);
         } else {
             // line = encode_C
-			// ?
         }
         // write line to output file
     }
