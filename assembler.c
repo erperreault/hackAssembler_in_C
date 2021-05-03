@@ -1,6 +1,5 @@
 /* Assembler for the Hack assembly language, implemented in C. */
 
-
 #include "data.c"
 #include "parser.c"
 
@@ -34,6 +33,7 @@ int second_pass() {
             printf("%s\n", binline);
         } else {
             // line = encode_C
+			// ?
         }
         // write line to output file
     }
