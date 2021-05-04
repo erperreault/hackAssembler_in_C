@@ -50,8 +50,9 @@ void encode_A(char* line, char* binline) {
     tobinary(val, binline);  
 }
 
-int encode_C(char* mnemonic) {
-    // Check type and lookup using dest() comp() or jump()
+int encode_C(char* line, char* binline) {
+    // Check type and lookup using getDest() getComp() or getJump()
+	// With mnemonic, reference lookup_x in data.c for binary
 }
 
 /* dig out particular parts of C commands */
