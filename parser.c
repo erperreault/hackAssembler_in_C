@@ -56,7 +56,7 @@ void encode_C(char* line, char* binline) {
 
     // Check type and lookup using getDest() getComp() or getJump()
 
-	getComp(line, C_mnemonic); // there will always be a C command
+	getComp(line, C_mnemonic); 	// there will always be a C command
 
 	if (strstr(line, ';')) { 	// J commands require a ;
 		getJump(line, J_mnemonic);
