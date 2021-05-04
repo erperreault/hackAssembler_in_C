@@ -50,35 +50,57 @@ void encode_A(char* line, char* binline) {
     tobinary(val, binline);  
 }
 
-int encode_C(char* line, char* binline) {
+void encode_C(char* line, char* binline) {
+	char D_mnemonic[10], C_mnemonic[10], J_mnemonic[10];
+	char D_bin[10], C_bin[10], J_bin[10];
+
     // Check type and lookup using getDest() getComp() or getJump()
+
+	getComp(line, C_mnemonic); // there will always be a C command
+
+	if (strstr(line, ';')) { 	// J commands require a ;
+		getJump(line, J_mnemonic);
+	}
+
+	if (strstr(line, '=')) { 	// D commands require a =
+		getDest(line, D_mnemonic);
+	}
+
 	// With mnemonic, reference lookup_x in data.c for binary
+	D_bin = dest(D_mnemonic);
+	C_bin = dest(C_mnemonic);
+	J_bin = dest(J_mnemonic);
+
+	// Reference the three binary commands to form binline
+	strcpy(binline[0], "111"); // C commands always start with three 1s	
+	strcpy(binline[3], C_bin); // C_bin will be 7 bytes; includes the A-bit
+	strcpy(binline[10], D_bin); // D_bin will be 3 bytes
+	strcpy(binline[13], J_bin); // J_bin will be 3 bytes
 }
 
-/* dig out particular parts of C commands */
-
-int getDest() {
-    // for C commands, return Dest mnemonic
+void getDest(char* line, char* mnemonic) {
+    // update Dest mnemonic
+	
 }
 
-int getComp() {
-    // for C commands, return Comp mnemonic
+void getComp(char* line, char* mnemonic) {
+    // update Comp mnemonic
 }
 
-int getJump() {
-    // for C commands, return Jump mnemonic
+void getJump(char* line, char* mnemonic) {
+    // update Jump mnemonic
 }
 
 /* lookup from data.c */
 
-int dest(char* mnemonic) {
+char* dest(char* mnemonic) {
     // Return binary of dest mnemonic.
 }
 
-int comp(char* mnemonic) {
+char* comp(char* mnemonic) {
     // Return binary of comp mnemonic.
 }
 
-int jump(char* mnemonic) {
+char* jump(char* mnemonic) {
     // Return binary of jump mnemonic.
 }

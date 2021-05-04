@@ -32,14 +32,14 @@ int second_pass() {
             encode_A(line, binline);
             printf("%s\n", binline);
         } else {
-            // line = encode_C
-			// ?
+            encode_C(line, binline);
+			printf("%s\n", binline);
         }
         // write line to output file
     }
 }  
 
 int main() {
-    // first_pass();
-    second_pass();
+    // first_pass(); 	// this will be the symbol table
+    second_pass(); 		// actual binary translation
 }
