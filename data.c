@@ -2,7 +2,7 @@
 #include <assert.h>
 
 /* is this better than using a simple struct and lookup function? */
-char * dest_lookup(char *mnemonic) {
+const char* dest_lookup(const char* mnemonic) {
     if (!strcmp("null", mnemonic)) {
         return "000";
     } else if (!strcmp("M", mnemonic)) {
@@ -20,11 +20,11 @@ char * dest_lookup(char *mnemonic) {
     } else if (!strcmp("AMD", mnemonic)) {
         return "111";
     } else {
-        return "Error in dest_lookup: DEST mnemonic not found.";
+        return mnemonic; 
     }
 }
 
-char * jump_lookup(char *mnemonic) {
+const char* jump_lookup(const char* mnemonic) {
     if (!strcmp("null", mnemonic)) {
         return "000";
     } else if (!strcmp("JGT", mnemonic)) {
@@ -42,11 +42,11 @@ char * jump_lookup(char *mnemonic) {
     } else if (!strcmp("JMP", mnemonic)) {
         return "111";
     } else {
-        return "Error in jump_lookup: JUMP mnemonic not found.";
+        return mnemonic;
     }
 }
 
-char * comp_lookup(char *mnemonic) {
+const char* comp_lookup(const char* mnemonic) {
     if (!strcmp("0", mnemonic)) {
         return "0101010";
     } else if (!strcmp("1", mnemonic)) {
@@ -104,7 +104,7 @@ char * comp_lookup(char *mnemonic) {
     } else if (!strcmp("D|M", mnemonic)) {
         return "1010101";
     } else {
-        return "Error in comp_lookup: COMP mnemonic not found.";
+        return mnemonic;
     }
 }
 
