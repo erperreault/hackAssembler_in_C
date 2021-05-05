@@ -1,6 +1,5 @@
 /* Assembler for the Hack assembly language, implemented in C. */
 
-#include "data.c"
 #include "parser.c"
 
 // Scan through and create symbol table. 
@@ -31,7 +30,9 @@ int second_pass() {
         if (type == 'A') {
             encode_A(line, binline);
             printf("%s\n", binline);
-        } else {
+        } else if (type == '?') {
+			;
+		} else {
             encode_C(line, binline);
 			printf("%s\n", binline);
         }
