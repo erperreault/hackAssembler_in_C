@@ -47,6 +47,7 @@ const char* jump_lookup(const char* mnemonic) {
 }
 
 const char* comp_lookup(const char* mnemonic) {
+	printf("mn = %s\n", mnemonic);
     if (!strcmp("0", mnemonic)) {
         return "0101010";
     } else if (!strcmp("1", mnemonic)) {
@@ -118,6 +119,7 @@ void data_unit_tests() {
     assert(strcmp(jump_lookup("null"), "000") == 0);
 
     assert(strcmp(comp_lookup("0"), "0101010") == 0);
+    assert(strcmp(comp_lookup("D"), "0001100") == 0);
     assert(strcmp(comp_lookup("!D"), "0001101") == 0);
     assert(strcmp(comp_lookup("A-1"), "0110010") == 0);
     assert(strcmp(comp_lookup("D&A"), "0000000") == 0);

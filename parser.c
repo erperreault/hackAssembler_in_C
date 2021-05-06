@@ -8,7 +8,7 @@ char getCommandType(char* line) {
     // return command type of current line
     int c = line[0];
 
-    if (c == '/' || line[1] == '\n') {
+    if (c == '/' || line[1] == 0) {
         return '?';
     } else if (c == '@') {
         return 'A';
@@ -51,63 +51,46 @@ void encode_A(char* line, char* binline) {
     tobinary(val, binline);  
 }
 
-const char* getDest(char* line) {
-    // return Dest mnemonic from command
-	const char* dest = strtok(line, "=");
-	return dest;
-}
-
-const char* getComp(char* line) {
-    // return Comp mnemonic from command
-
-}
-
-const char* getJump(char* line) {
-    // return Jump mnemonic from command
-}
-
 //
 // lookup from data.c
 //
 
-const char* dest(const char* mnemonic) {
-    // Get binary of dest mnemonic.
-	return dest_lookup(mnemonic);
-}
-
-const char* comp(const char* mnemonic) {
-    // Get binary of comp mnemonic.
-	return comp_lookup(mnemonic);
-}
-
-const char* jump(const char* mnemonic) {
-    // Get binary of jump mnemonic.
-	return jump_lookup(mnemonic);
-}
-
 void encode_C(char* line, char* binline) {
-    // Check type and lookup using getDest() getComp() or getJump()
+	const char* C_mnemonic = "null";
+	const char* D_mnemonic = "null";
+	const char* J_mnemonic = "null";
+	char* x;
 
-	const char* C_mnemonic = getComp(line); 	// there will always be a C command
-	const char* D_mnemonic = getDest(line);
-	const char* J_mnemonic = getJump(line);
+	printf("line = %s\n", line);
 
-	if (strstr(line, ";")) {
-		const char* J_mnemonic = getJump(line);	// J commands require a ;
-	} else {
-		const char* J_mnemonic = "null";
+	if (x = strchr(line, '=')) {
+		*x = 0;
+		D_mnemonic = line;
+		printf("Dmn = %s\n", D_mnemonic);
+		line = x+1;
 	}
 
-	if (strstr(line, "=")) { 		// D commands require a =
-		D_mnemonic = getDest(line);
+	if (x = strchr(line, ';')) {
+		*x = 0;
+		C_mnemonic = line;
+		printf("Cmn = %s\n", C_mnemonic);
+		J_mnemonic = x+1;
+		printf("Jmn = %s\n", J_mnemonic);
 	} else {
-		D_mnemonic = "null";
+		C_mnemonic = line;
+		printf("Cmn = %s\n", C_mnemonic);
 	}
-
+		
 	// With mnemonic, reference lookup_x in data.c for binary
-	const char* D_bin = dest(D_mnemonic);
-	const char* C_bin = comp(C_mnemonic);
-	const char* J_bin = jump(J_mnemonic);
+	const char* D_bin = "000";
+	const char* C_bin = "0000000";
+	const char* J_bin = "000";
+	D_bin = dest_lookup(D_mnemonic);
+	printf("Db = %s\n", D_bin);
+	C_bin = comp_lookup(C_mnemonic);
+	printf("Cb = %s\n", C_bin);
+	J_bin = jump_lookup(J_mnemonic);
+	printf("Jb = %s\n", J_bin);
 
 	// TODO can this be replaced by sprintf()?
 	// Reference the three binary commands to form binline

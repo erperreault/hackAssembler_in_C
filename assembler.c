@@ -25,13 +25,16 @@ int second_pass() {
     
     while (fgets(line, 1000, stdin) != NULL) {
         char binline[] = "0000000000000000";
+		char* x = strrchr(line, '\n');
+		*x = '\0';
+
         type = getCommandType(line);
 
-        if (type == 'A') {
+		if (type == '?') {
+			;
+		} else if (type == 'A') {
             encode_A(line, binline);
             printf("%s\n", binline);
-        } else if (type == '?') {
-			;
 		} else {
             encode_C(line, binline);
 			printf("%s\n", binline);
