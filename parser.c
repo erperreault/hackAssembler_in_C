@@ -8,7 +8,7 @@ char getCommandType(char* line) {
     // return command type of current line
     int c = line[0];
 
-    if (c == '/' || line[1] == 0) {
+    if (c == '/' || c == 0) {
         return '?';
     } else if (c == '@') {
         return 'A';
@@ -61,24 +61,18 @@ void encode_C(char* line, char* binline) {
 	const char* J_mnemonic = "null";
 	char* x;
 
-	printf("line = %s\n", line);
-
 	if (x = strchr(line, '=')) {
 		*x = 0;
 		D_mnemonic = line;
-		// printf("Dmn = %s\n", D_mnemonic);
 		line = x+1;
 	}
 
 	if (x = strchr(line, ';')) {
 		*x = 0;
 		C_mnemonic = line;
-		// printf("Cmn = %s\n", C_mnemonic);
 		J_mnemonic = x+1;
-		// printf("Jmn = %s\n", J_mnemonic);
 	} else {
 		C_mnemonic = line;
-		// printf("Cmn = %s\n", C_mnemonic);
 	}
 	
 	/* OK - the issue is with the final command of the string.
@@ -91,7 +85,6 @@ void encode_C(char* line, char* binline) {
 	const char* C_bin = "0000000";
 	const char* J_bin = "000";
 	D_bin = dest_lookup(D_mnemonic);
-	printf("%d\n", strcmp("D+A", C_mnemonic));
 	C_bin = comp_lookup(C_mnemonic);
 	J_bin = jump_lookup(J_mnemonic);
 

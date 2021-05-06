@@ -47,7 +47,6 @@ const char* jump_lookup(const char* mnemonic) {
 }
 
 const char* comp_lookup(const char* mnemonic) {
-	printf("mn = %s\n", mnemonic);
     if (!strcmp("0", mnemonic)) {
         return "0101010";
     } else if (!strcmp("1", mnemonic)) {

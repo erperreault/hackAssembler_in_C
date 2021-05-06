@@ -25,7 +25,7 @@ int second_pass() {
     
     while (fgets(line, 1000, stdin) != NULL) {
         char binline[] = "0000000000000000";
-		char* x = strrchr(line, '\n');
+		char* x = strrchr(line, '\n') - 1;
 		*x = 0;
 
         type = getCommandType(line);
