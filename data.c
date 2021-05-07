@@ -1,127 +1,131 @@
 #include <string.h>
 #include <assert.h>
 
-/* is this better than using a simple struct and lookup function? */
+const char* dest_mnemonics[] = {
+	"null",
+	"M",
+	"D",
+	"MD",
+	"A",
+	"AM",
+	"AD",
+	"AMD"
+};
+
+const char* dest_binaries[] = {
+	"000",
+	"001",
+	"010",
+	"011",
+	"100",
+	"101",
+	"110",
+	"111"
+};
+
+const char* jump_mnemonics[] = {
+	"null",
+	"JGT",
+	"JEQ",
+	"JGE",
+	"JLT",
+	"JNE",
+	"JLE",
+	"JMP"
+};
+
+const char* jump_binaries[] = {
+	"000",
+	"001",
+	"010",
+	"011",
+	"100",
+	"101",
+	"110",
+	"111"
+};
+
+const char* comp_mnemonics[] = {
+	"0",
+	"1",
+	"-1",
+	"D",
+	"A",
+	"!D",
+	"!A",
+	"-D",
+	"-A",
+	"D+1",
+	"A+1",
+	"D-1",
+	"A-1",
+	"D+A",
+	"D-A",
+	"A-D",
+	"D&A",
+	"D|A",
+	"M",
+	"!M",
+	"-M",
+	"M+1",
+	"M-1",
+	"D+M",
+	"D-M",
+	"M-D",
+	"D&M",
+	"D|M"
+};
+
+
+const char* comp_binaries[] = {
+	"0101010",
+	"0111111",
+	"0111010",
+	"0001100",
+	"0110000",
+	"0001101",
+	"0110001",
+	"0001111",
+	"0110011",
+	"0011111",
+	"0110111",
+	"0001110",
+	"0110010",
+	"0000010",
+	"0010011",
+	"0000111",
+	"0000000",
+	"0010101",
+	"1110000",
+	"1110001",
+	"1110011",
+	"1110111",
+	"1110010",
+	"1000010",
+	"1010011",
+	"1000111",
+	"1000000",
+	"1010101"
+};
+
+const char* lookup(const char* abc[], const char* bin[], const char* mnemonic) {
+	int i;
+
+	for (i = 0; abc[i] != NULL; i++) {
+		if (!strcmp(mnemonic, abc[i])) {
+			return bin[i];			
+		}
+	}
+}
+
 const char* dest_lookup(const char* mnemonic) {
-    if (!strcmp("null", mnemonic)) {
-        return "000";
-    } else if (!strcmp("M", mnemonic)) {
-        return "001";
-    } else if (!strcmp("D", mnemonic)) {
-        return "010";
-    } else if (!strcmp("MD", mnemonic)) {
-        return "011";
-    } else if (!strcmp("A", mnemonic)) {
-        return "100";
-    } else if (!strcmp("AM", mnemonic)) {
-        return "101";
-    } else if (!strcmp("AD", mnemonic)) {
-        return "110";
-    } else if (!strcmp("AMD", mnemonic)) {
-        return "111";
-    } else {
-        return mnemonic; 
-    }
+	return lookup(dest_mnemonics, dest_binaries, mnemonic);	
 }
 
 const char* jump_lookup(const char* mnemonic) {
-    if (!strcmp("null", mnemonic)) {
-        return "000";
-    } else if (!strcmp("JGT", mnemonic)) {
-        return "001";
-    } else if (!strcmp("JEQ", mnemonic)) {
-        return "010";
-    } else if (!strcmp("JGE", mnemonic)) {
-        return "011";
-    } else if (!strcmp("JLT", mnemonic)) {
-        return "100";
-    } else if (!strcmp("JNE", mnemonic)) {
-        return "101";
-    } else if (!strcmp("JLE", mnemonic)) {
-        return "110";
-    } else if (!strcmp("JMP", mnemonic)) {
-        return "111";
-    } else {
-        return mnemonic;
-    }
+	return lookup(jump_mnemonics, jump_binaries, mnemonic);	
 }
 
 const char* comp_lookup(const char* mnemonic) {
-    if (!strcmp("0", mnemonic)) {
-        return "0101010";
-    } else if (!strcmp("1", mnemonic)) {
-        return "0111111";
-    } else if (!strcmp("-1", mnemonic)) {
-        return "0111010";
-    } else if (!strcmp("D", mnemonic)) {
-        return "0001100";
-    } else if (!strcmp("A", mnemonic)) {
-        return "0110000";
-    } else if (!strcmp("!D", mnemonic)) {
-        return "0001101";
-    } else if (!strcmp("!A", mnemonic)) {
-        return "0110001";
-    } else if (!strcmp("-D", mnemonic)) {
-        return "0001111";
-    } else if (!strcmp("-A", mnemonic)) {
-        return "0110011";
-    } else if (!strcmp("D+1", mnemonic)) {
-        return "0011111";
-    } else if (!strcmp("A+1", mnemonic)) {
-        return "0110111";
-    } else if (!strcmp("D-1", mnemonic)) {
-        return "0001110";
-    } else if (!strcmp("A-1", mnemonic)) {
-        return "0110010";
-    } else if (!strcmp("D+A", mnemonic)) {
-        return "0000010";
-    } else if (!strcmp("D-A", mnemonic)) {
-        return "0010011";
-    } else if (!strcmp("A-D", mnemonic)) {
-        return "0000111";
-    } else if (!strcmp("D&A", mnemonic)) {
-        return "0000000";
-    } else if (!strcmp("D|A", mnemonic)) {
-        return "0010101";
-    } else if (!strcmp("M", mnemonic)) {
-        return "1110000";
-    } else if (!strcmp("!M", mnemonic)) {
-        return "1110001";
-    } else if (!strcmp("-M", mnemonic)) {
-        return "1110011";
-    } else if (!strcmp("M+1", mnemonic)) {
-        return "1110111";
-    } else if (!strcmp("M-1", mnemonic)) {
-        return "1110010";
-    } else if (!strcmp("D+M", mnemonic)) {
-        return "1000010";
-    } else if (!strcmp("D-M", mnemonic)) {
-        return "1010011";
-    } else if (!strcmp("M-D", mnemonic)) {
-        return "1000111";
-    } else if (!strcmp("D&M", mnemonic)) {
-        return "1000000";
-    } else if (!strcmp("D|M", mnemonic)) {
-        return "1010101";
-    } else {
-        return mnemonic;
-    }
-}
-
-void data_unit_tests() {
-    assert(strcmp(dest_lookup("D"), "010") == 0);
-    assert(strcmp(dest_lookup("AMD"), "111") == 0);
-    assert(strcmp(dest_lookup("null"), "000") == 0);
-
-    assert(strcmp(jump_lookup("JGT"), "001") == 0);
-    assert(strcmp(jump_lookup("JMP"), "111") == 0);
-    assert(strcmp(jump_lookup("null"), "000") == 0);
-
-    assert(strcmp(comp_lookup("0"), "0101010") == 0);
-    assert(strcmp(comp_lookup("D"), "0001100") == 0);
-    assert(strcmp(comp_lookup("!D"), "0001101") == 0);
-    assert(strcmp(comp_lookup("A-1"), "0110010") == 0);
-    assert(strcmp(comp_lookup("D&A"), "0000000") == 0);
-    assert(strcmp(comp_lookup("-M"), "1110011") == 0);
-    assert(strcmp(comp_lookup("M-D"), "1000111") == 0);
+	return lookup(comp_mnemonics, comp_binaries, mnemonic);	
 }
