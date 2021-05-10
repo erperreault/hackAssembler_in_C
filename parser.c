@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "data.c"
+#include "table.c"
 
 char getCommandType(char* line) {
     // return command type of current line
