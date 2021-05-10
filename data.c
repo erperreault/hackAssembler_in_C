@@ -75,7 +75,6 @@ const char* comp_mnemonics[] = {
 	"D|M"
 };
 
-
 const char* comp_binaries[] = {
 	"0101010",
 	"0111111",

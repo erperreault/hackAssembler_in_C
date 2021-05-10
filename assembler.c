@@ -2,6 +2,9 @@
 
 #include "parser.c"
 
+// TODO have this program write to file
+// It should read the source file, strip the extension, and output xxxxxxC.hack
+
 // Scan through and create symbol table. 
 int first_pass() {
     char line[1000];
