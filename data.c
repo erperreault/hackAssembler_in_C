@@ -1,5 +1,4 @@
 #include <string.h>
-#include <assert.h>
 
 const char* dest_mnemonics[] = {
 	"null",
@@ -118,14 +117,12 @@ const char* lookup(const char* abc[], const char* bin[], const char* mnemonic) {
 	}
 }
 
-const char* dest_lookup(const char* mnemonic) {
-	return lookup(dest_mnemonics, dest_binaries, mnemonic);	
-}
-
-const char* jump_lookup(const char* mnemonic) {
-	return lookup(jump_mnemonics, jump_binaries, mnemonic);	
-}
-
-const char* comp_lookup(const char* mnemonic) {
-	return lookup(comp_mnemonics, comp_binaries, mnemonic);	
+const char* get_binary(const char* mnemonic, char type) {
+	if (type == 'D') {
+		return lookup(dest_mnemonics, dest_binaries, mnemonic);
+	} else if (type == 'C') {
+		return lookup(comp_mnemonics, comp_binaries, mnemonic);	
+	} else if (type == 'J') {
+		return lookup(jump_mnemonics, jump_binaries, mnemonic);	
+	}
 }
