@@ -1,19 +1,23 @@
 #!/bin/bash
 
+CC=gcc
+SRC=assembler.c
+OUT=assembler
+
 check () {
-	name=$(echo $1 | cut -f 1 -d '.')
-	./a.out < $1 > $name.hackC
+	name=$(echo "$1" | cut -f 1 -d '.')
+	./$OUT < $1 > $name.hackC
 	diff $name.hack $name.hackC
 }
 
-# Assemble binary
-gcc assembler.c
+# Compile assembler
+$CC $SRC -o $OUT
 
-# Check all files
+# Assemble binaries and test each output 
 for FILE in $(ls programs | grep .asm)
 do
-	check programs/$FILE
+	check "programs/$FILE"
 done
 
 # Cleanup
-rm a.out programs/*.hackC
+rm $OUT programs/*.hackC

@@ -1,19 +1,15 @@
-const char* bin_lookup(const char* abc[], const char* bin[], const char* mnemonic) {
+const char* lookup(struct entry table[], const char* mnemonic) {
 	int i;
 
-	for (i = 0; abc[i] != NULL; i++) {
-		if (!strcmp(mnemonic, abc[i])) {
-			return bin[i];			
+	for (i=0; table[i].key != NULL; i++) {
+		if (!strcmp(mnemonic, table[i].key)) { 
+			return table[i].val;
 		}
 	}
 }
 
-const char* get_binary(const char* mnemonic, char type) {
-	if (type == 'D') {
-		return bin_lookup(dest_mnemonics, dest_binaries, mnemonic);
-	} else if (type == 'C') {
-		return bin_lookup(comp_mnemonics, comp_binaries, mnemonic);	
-	} else if (type == 'J') {
-		return bin_lookup(jump_mnemonics, jump_binaries, mnemonic);	
-	}
+void install(struct entry table[], struct entry new, int length) {
+	table[length] = new;
+	printf("%d\n", length);
+	length++;
 }
