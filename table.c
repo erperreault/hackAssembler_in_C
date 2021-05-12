@@ -1,3 +1,30 @@
+struct symbol {
+	char* key;
+	char* val;
+	struct symbol* next;
+};
+
+struct symbol* s_install(struct symbol* head, char* key, char* val) {
+	struct symbol* new = (struct symbol*) malloc(sizeof(struct symbol));
+
+	new->key = key;
+	new->val = val;
+	new->next = head;
+
+	return new;
+}
+
+char* s_lookup(struct symbol* head, char* key) {
+	while (head != NULL) {
+		if (!strcmp(key, head->key)) {
+			return head->val;
+		} else {
+		head = head->next;
+		}
+	}
+	return NULL;
+}
+
 const char* lookup(struct entry table[], const char* mnemonic) {
 	int i;
 

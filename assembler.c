@@ -2,42 +2,46 @@
 
 #include "parser.c"
 
+struct symbol* symbol_table;
+
 // Scan through and create symbol table. 
 int first_pass() {
-    char line[1000];
-    char symbol[1000];
-	char address[] = "0000000000000000";
+    char line[100];
     int line_number = 0;
-	int length = 23;
-
 
     while (fgets(line, 1000, stdin) != NULL) {
 		if (getCommandType(line) == 'L') {
+			char* symbol = (char*) malloc(100*sizeof(char));
+			char* val = (char*) malloc(100*sizeof(char));
+
 			getSymbol(line, symbol);
-			struct entry new = {.key = "0000000000", .val = "0000000000"};
-			strcpy(new.key, symbol);
-			char temp[100];
-			sprintf(temp, "%d", line_number);
-			strcpy(new.val, temp);
-			install(table, new, length);
-        } else {
+			sprintf(val, "%d", line_number);
+
+			symbol_table = s_install(symbol_table, symbol, val);
+        } else if (getCommandType(line) == '?') {
+			;
+		} else {
             line_number++;
         }
     }
+	/*
+	struct symbol* x = symbol_table;
 
-	int i;
-	for (i = 0; i < length; i++) {
-		printf("%s : %s\n", table[i].key, table[i].val);
+	while (x != NULL) {
+		printf("%s %s\n", x->key, x->val);
+		x = x->next;
 	}
+	printf("%s\n", s_lookup(symbol_table, "(OUTPUT_D)"));
+	*/
 } 
 
 // Perform actual translation, referencing symbol table.
 int second_pass() {
-    char line[1000];
+    char line[100];
     char type;
 
     while (fgets(line, 1000, stdin) != NULL) {
-        char binline[] = "0000000000000000";
+        char* binline = (char*) malloc(16*sizeof(char));
 		char* x = strrchr(line, '\n') - 1;
 		*x = 0;
 
@@ -60,5 +64,6 @@ int second_pass() {
 
 int main() {
     first_pass(); 		// this will be the symbol table
+	rewind(stdin);
     // second_pass(); 		// actual binary translation
 }

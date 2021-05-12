@@ -7,9 +7,9 @@
 
 char getCommandType(char* line) {
     // return command type of current line
-    int c = line[0];
+    char c = *line;
 
-    if (c == '/' || c == 0) {
+    if (c == '/' || c == '\r') {
         return '?';
     } else if (c == '@') {
         return 'A';
@@ -20,9 +20,9 @@ char getCommandType(char* line) {
     }
 }
 
-int getSymbol(char* line, char* symbol) {
+void getSymbol(char* line, char* symbol) {
     // return contents between ( and )
-	char* x = strrchr(line, '\n');
+	char* x = strrchr(line, '\r');
 	*x = 0;
 	strcpy(symbol, line);
 }
