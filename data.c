@@ -1,8 +1,8 @@
 #include <string.h>
 
 struct entry {
-	char key[10];
-	char val[10];
+	char* key;
+	char* val;
 };
 
 struct entry table[1000] = {

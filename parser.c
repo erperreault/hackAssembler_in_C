@@ -1,15 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "data.c"
 #include "table.c"
+
+char* cleanupLine(char* line) {
+	while (isspace(*line)) {
+		line++;
+	};
+
+	char* x = strstr(line, "//");
+	if (x != NULL) {
+		*x = 0;
+	}
+
+	char* y = strrchr(line, '\r');
+	if (y != NULL) {
+		*y = 0;
+	}
+
+	return line;
+}
 
 char getCommandType(char* line) {
     // return command type of current line
     char c = *line;
 
-    if (c == '/' || c == '\r') {
+    if (c == '/' || c == '\t' || c == ' ' || c == '\n' || c == '\0' || c == '\r') {
         return '?';
     } else if (c == '@') {
         return 'A';
@@ -48,25 +67,10 @@ void encode_A(char* line, char* binline) {
     tobinary(val, binline);  
 }
 
-void encode_L(char* line, char* binline) {
-    // encode L
-    const char* val;
-	char* symbol = "aaaaaaaaaaaaaaaa";
-
-	printf("%s\n", line);
-	getSymbol(line, symbol);
-	printf("%s\n", symbol);
-	val = lookup(table, symbol);
-	printf("%s\n", val);
-	int x = atoi(val);
-
-    tobinary(x, binline);  
-}
-
 void encode_C(char* line, char* binline) {
-	const char* C_mnemonic = "null";
-	const char* D_mnemonic = "null";
-	const char* J_mnemonic = "null";
+	char* C_mnemonic = "null";
+	char* D_mnemonic = "null";
+	char* J_mnemonic = "null";
 	char* x;
 
 	if (x = strchr(line, '=')) {
@@ -84,12 +88,9 @@ void encode_C(char* line, char* binline) {
 	}
 
 	// With mnemonic, reference lookup_x in data.c for binary
-	const char* D_bin = "000";
-	const char* C_bin = "0000000";
-	const char* J_bin = "000";
-	D_bin = lookup(dest_table, D_mnemonic);
-	C_bin = lookup(comp_table, C_mnemonic);
-	J_bin = lookup(jump_table, J_mnemonic);
+	char* C_bin = lookup(comp_table, C_mnemonic);
+	char* D_bin = lookup(dest_table, D_mnemonic);
+	char* J_bin = lookup(jump_table, J_mnemonic);
 
 	// Build binary string
 	sprintf(binline, "111%s%s%s", C_bin, D_bin, J_bin);

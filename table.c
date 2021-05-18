@@ -25,18 +25,13 @@ char* s_lookup(struct symbol* head, char* key) {
 	return NULL;
 }
 
-const char* lookup(struct entry table[], const char* mnemonic) {
+char* lookup(struct entry table[], char* mnemonic) {
 	int i;
 
 	for (i=0; table[i].key != NULL; i++) {
+		// printf("%s\n", table[i].key);
 		if (!strcmp(mnemonic, table[i].key)) { 
 			return table[i].val;
 		}
 	}
-}
-
-void install(struct entry table[], struct entry new, int length) {
-	table[length] = new;
-	printf("%d\n", length);
-	length++;
 }
