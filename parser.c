@@ -40,9 +40,10 @@ char getCommandType(char* line) {
 }
 
 void getSymbol(char* line, char* symbol) {
-    // return contents between ( and )
-	char* x = strrchr(line, '\r');
-	*x = 0;
+	line++;
+	if (strrchr(line, ')')) {
+		*strrchr(line, ')') = 0;
+	}
 	strcpy(symbol, line);
 }
 
@@ -59,10 +60,16 @@ void tobinary(int val, char* line) {
 }
 
 void encode_A(char* line, char* binline) {
-    // encode A
+	extern struct symbol* symbol_table;
     int val;
 
-    val = atoi(++line); // skip the @
+	line++; // skip the @
+
+	if (s_lookup(symbol_table, line) != NULL) {
+		line = s_lookup(symbol_table, line);
+	}
+
+    val = atoi(line);
 
     tobinary(val, binline);  
 }

@@ -26,7 +26,7 @@ int first_pass() {
             line_number++;
         }
     }
-	/*	
+	/*
 	struct symbol* x = symbol_table;
 	while (x != NULL) {
 		printf("%s %s\n", x->key, x->val);
@@ -48,10 +48,8 @@ int second_pass() {
         char binline[] = "0000000000000000"; 
 
         type = getCommandType(line);
-		// printf("%c\n", type);
-		// printf("%s\n", line);
 
-		if (type == '?') {
+		if (type == '?' || type == 'L') {
 			;
 		} else if (type == 'A') {
             encode_A(line, binline);
