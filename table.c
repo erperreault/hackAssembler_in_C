@@ -17,13 +17,15 @@ struct symbol* s_install(struct symbol* head, char* key, char* val) {
 char* s_lookup(struct symbol* head, char* key) {
 	extern struct entry table[];
 	int i;
-
+	
+	// try hard-coded table first
 	for (i=0; table[i].key != NULL; i++) {
 		if (!strcmp(key, table[i].key)) {
 			return table[i].val;
 		}
 	}
-
+	
+	// second test the generated symbol table
 	while (head != NULL) {
 		if (!strcmp(key, head->key)) {
 			return head->val;

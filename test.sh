@@ -20,4 +20,4 @@ do
 done
 
 # Cleanup
-# rm $OUT programs/*.hackC
+rm $OUT programs/*.hackC

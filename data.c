@@ -1,5 +1,3 @@
-#include <string.h>
-
 struct entry {
 	char* key;
 	char* val;
