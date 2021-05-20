@@ -1,13 +1,30 @@
-/* struct entry is used for hardcoded data, simply associating
- * a key and a value as a lookup table
+/* Initially I threw together a set a functions which essentially did:
+ * 		switch key: case (!strcmp("KEY", key)) -> return "VAL"
+ * This was fine for phase 1 of the project (building second_pass),
+ * and let me postpone digging into structs until after I got something
+ * working. 
+ *
+ * Coming from Python, it was a big perspective shift to forget about 
+ * dicts as a built-in data structure and accept that in C it very often 
+ * makes sense to roll your own. 
+ *
+ * Once I got around to actually implementing the lookup table, I found
+ * it fairly intuitive. Pointers were one of the easier concepts for me
+ * to pick up (I suppose thanks to the rest of nand2tetris which I had
+ * already completed) so it was really just a question of learning the
+ * struct syntax. One hangup was ironing out the difference between:
+ * 		.key	vs	->key
+ * Which basically requires distinguishing between a pointer to the 
+ * struct and the struct itself.
  */
 struct entry {
 	char* key;
 	char* val;
 };
 
-/* Iterate over entries checking if a key matches mnemonic,
- * then return associated val.
+/* There were a few things to learn related to what you get when you
+ * look for structs and members that aren't there, but otherwise 
+ * this was straightforward.
  */
 char* lookup(struct entry table[], char* mnemonic) {
 	int i;
@@ -17,14 +34,8 @@ char* lookup(struct entry table[], char* mnemonic) {
 			return table[i].val;
 		}
 	}
-
-	return NULL;
 }
 
-/* This is technically the symbol table initialization, but our approach
- * handles the symbol table separately. Lookup involves checking this first
- * and then the symbol table.
- */
 struct entry table[] = {
 	{"SP", "0"},
 	{"LCL", "1"},

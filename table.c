@@ -26,12 +26,10 @@ struct symbol* s_install(struct symbol* head, char* key, char* val) {
 char* s_lookup(struct symbol* head, char* key) {
 	int i;
 	
-	for (i=0; table[i].key != NULL; i++) {
-		if (!strcmp(key, table[i].key)) {
-			return table[i].val;
-		}
+	if (lookup(table, key)) {
+		return lookup(table, key);
 	}
-	
+
 	while (head != NULL) {
 		if (!strcmp(key, head->key)) {
 			return head->val;
