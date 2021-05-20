@@ -1,9 +1,16 @@
+/* struct entry is used for hardcoded data, simply associating
+ * a key and a value as a lookup table
+ */
 struct entry {
 	char* key;
 	char* val;
 };
 
-struct entry table[1000] = {
+/* This is technically the symbol table initialization, but our approach
+ * handles the symbol table separately. Lookup involves checking this first
+ * and then the symbol table.
+ */
+struct entry table[] = {
 	{"SP", "0"},
 	{"LCL", "1"},
 	{"ARG", "2"},
