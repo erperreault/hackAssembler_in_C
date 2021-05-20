@@ -4,8 +4,6 @@
 #include "data.c"
 #include "table.c"
 
-#define TESTING 0
-
 /* fill target string from the right with binary of given int
  * so: tobinary(3, "00000") -> "00011"  
  */
@@ -13,8 +11,8 @@ void tobinary(int val, char* line) {
     int i;
     int len = strlen(line);
 
-    for (i = 1; i <= len; i++) {  // i = 1 so we have last index
-        line[len-i] = '0' + (val % 2); // either 0 or 1
+    for (i = 1; i <= len; i++) {  /* i = 1 so we have last index */
+        line[len-i] = '0' + (val % 2); /* either 0 or 1 */
         val = val / 2;    
     }
 }
@@ -140,15 +138,15 @@ void encode_C(char* line, char* binline) {
 	sprintf(binline, "111%s%s%s", C_bin, D_bin, J_bin);
 }
 
-/* Create symbol table. 
+/* Create symbol table. We simply look for labels ex. (LABEL)
+ * and add an entry for each associating it to the current line number.
  */
 int first_pass() {
 	char* line = (char*) malloc(100*sizeof(char));
-    int line_number = 0;
+    int line_number = 0; /* we need to track this for LABEL values */
 
     while (fgets(line, 1000, stdin) != NULL) {
 		line = cleanupLine(line);
-		// printf("%s\n", line);
 		char type = getCommandType(line);
 		if (type == 'L') {
 			char* symbol = (char*) malloc(100*sizeof(char));
@@ -162,13 +160,6 @@ int first_pass() {
             line_number++;
         }
     }
-	/*
-	struct symbol* s = symbol_table;
-	while (s != NULL) {
-		printf("%s %s\n", s->key, s->val);
-		s = s->next;
-	}
-	*/
 } 
 
 // Perform actual translation, referencing symbol table.
@@ -193,17 +184,10 @@ int second_pass() {
 			printf("%s\n", binline);
         }
     }
-	/*
-	struct symbol* x = symbol_table;
-	while (x != NULL) {
-		printf("key: %s, val: %s\n", x->key, x->val);
-		x = x->next;
-	}	
-	*/
 }  
 
 int main() {
-    first_pass(); 		// the symbol table
+    first_pass();
 	rewind(stdin);
-	second_pass(); 		// actual binary translation
+	second_pass();
 }
