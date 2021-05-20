@@ -1,7 +1,7 @@
 # hackAssembler (in C)
 An assembler for the HACK assembly language, implemented in C.
 
-If you are interested in my learning process, please see the extensive learning remarks in the /learning_remarks folder! In these files all original comments are removed and instead I have provided longer accounts of my stumbling blocks and lessons learned throughout this project.
+If you are interested in my learning process building this project, please see the extensive learning remarks in the /learning_remarks folder! In these files all original comments are removed and instead I have provided longer accounts of challenges and how I grew by completing this project.
 
 ## Structure
 assembler.c -> The main procedures.
