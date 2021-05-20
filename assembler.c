@@ -4,10 +4,11 @@
 #include "data.c"
 #include "table.c"
 
-struct symbol* symbol_table;
+#define TESTING 0
 
-/*  fill target string from the right with binary of given int
-    so tobinary(3, "00000") -> "00011"  */
+/* fill target string from the right with binary of given int
+ * so: tobinary(3, "00000") -> "00011"  
+ */
 void tobinary(int val, char* line) {
     int i;
     int len = strlen(line);
@@ -18,7 +19,9 @@ void tobinary(int val, char* line) {
     }
 }
 
-void getSymbol(char* line, char* symbol) {
+/* line: (JUMPLABEL) -> symbol: JUMPLABEL
+ */
+void stripParens(char* line, char* symbol) {
 	line++;
 	if (strrchr(line, ')')) {
 		*strrchr(line, ')') = 0;
@@ -26,100 +29,119 @@ void getSymbol(char* line, char* symbol) {
 	strcpy(symbol, line);
 }
 
+/* Remove leading/trailing whitespace and comments from string.
+ */
 char* cleanupLine(char* line) {
-	while (isspace(*line)) {
-		line++;
-	};
-
 	char* x = strstr(line, "//");
 	if (x != NULL) {
 		*x = 0;
 	}
 
-	char* z = line;
-	while (!isspace(*z)) {
-		z++;
+	while (isspace(*line)) {
+		line++;
 	}
-	*z = '\0';
+	
+	x = line;
+	while (!isspace(*x)) {
+		x++;
+	} 
+	*x = 0;
 
 	return line;
 }
 
+/* Return command type of current line (A/L/C/?)
+ */
 char getCommandType(char* line) {
-    // return command type of current line
     char c = *line;
 
-    if (c == '/' || c == '\t' || c == ' ' || c == '\n' || c == '\0' || c == '\r') {
+	/* non-alphanumeric characters or leading slashes
+	 * which survive cleanupLine() will be treated as ? and skipped
+	 */
+    if (c == '/' || c == '\0' || c == ' ' 
+		|| c == '\n' || c == '\t' || c == '\r') {
         return '?';
     } else if (c == '@') {
         return 'A';
     } else if (c == '(') {
         return 'L';
     } else {
+		/* there is a gap here for characters not in the lookup tables,
+		 * but they will cause a noisy crash which is appropriate.
+		 */
         return 'C';
     }
 }
 
+/* Initial register for variable assignment, which is incremented
+ * as we encounter new variables.
+ */
 int var_reg = 16;
 
+/* A-commands are formatted as @xxxxxxxxx...
+ * encode_A strips the @, looks up or assigns label/variable values 
+ * if needed, and returns a final binary command.
+ */
 void encode_A(char* line, char* binline) {
-    int val;
-	char* reg = (char*) malloc(100*sizeof(char));
+    int val; /* the eventual memory address */
+	char* reg = (char*) malloc(100*sizeof(char)); /* string to hold it */
+
 	line++; // skip the @
 
+	/* ex. @12845 converted directly */
 	if (isdigit(*line)) {
 		val = atoi(line);
-		// printf("numeric line: __%d__\n", val);
+	/* ex. @LABEL after (LABEL) found in first_pass() */
 	} else if (s_lookup(symbol_table, line) != NULL) {
 		val = atoi(s_lookup(symbol_table, line));
-		// printf("looked up line: __%d__\n", val);
-	// this is somehow overwriting most previous keys when installing, why?
-	// it doesn't overwrite the symbols from first_pass()...
-	// and the new keys have dead space / tabs added in front
-	// the dead space explains why lookup doesn't match but where is it coming from?
+	/* ex. @variable after (variable) NOT found in first_pass() */
 	} else if (s_lookup(symbol_table, line) == NULL) {
-		val = var_reg;
-		char* key = (char*) malloc(100*sizeof(char));
+		/* to be added to symbol_table */
+		char* key = (char*) malloc(100*sizeof(char)); 
+
+		val = var_reg; /* grab next open register */
 		strcpy(key, line);
 		sprintf(reg, "%d", var_reg);
-		symbol_table = s_install(symbol_table, key, reg); // somehow this is fucking up line, it works for all other strings...
-		// printf("installed line: key __%s__, val __%d__\n", key, var_reg);
+		symbol_table = s_install(symbol_table, key, reg);
 		var_reg++;
 	}
 
     tobinary(val, binline);  
 }
-
+/* C-commands are formatted as A=M;JMP --> dest = comp ; jump
+ * the binary command is formatted as 111CCCCCCCDDDJJJ
+ * dest and jump are optional, so we look for '=' and ';' to see if they exist
+ */
 void encode_C(char* line, char* binline) {
-	char* C_mnemonic = "null";
 	char* D_mnemonic = "null";
+	char* C_mnemonic = "null";
 	char* J_mnemonic = "null";
-	char* x;
+	char* c;
 
-	if (x = strchr(line, '=')) {
-		*x = 0;
+	if (c = strchr(line, '=')) {
+		*c = 0;
 		D_mnemonic = line;
-		line = x+1;
+		line = c+1;
 	}
 
-	if (x = strchr(line, ';')) {
-		*x = 0;
+	if (c = strchr(line, ';')) {
+		*c = 0;
 		C_mnemonic = line;
-		J_mnemonic = x+1;
+		J_mnemonic = c+1;
 	} else {
 		C_mnemonic = line;
 	}
 
-	// With mnemonic, reference lookup_x in data.c for binary
-	char* C_bin = lookup(comp_table, C_mnemonic);
+	/* Reference lookup_x in data.c for each mnemonic */
 	char* D_bin = lookup(dest_table, D_mnemonic);
+	char* C_bin = lookup(comp_table, C_mnemonic);
 	char* J_bin = lookup(jump_table, J_mnemonic);
 
-	// Build binary string
 	sprintf(binline, "111%s%s%s", C_bin, D_bin, J_bin);
 }
 
-// Scan through and create symbol table. 
+/* Create symbol table. 
+ */
 int first_pass() {
 	char* line = (char*) malloc(100*sizeof(char));
     int line_number = 0;
@@ -131,7 +153,7 @@ int first_pass() {
 		if (type == 'L') {
 			char* symbol = (char*) malloc(100*sizeof(char));
 			char* val = (char*) malloc(100*sizeof(char));
-			getSymbol(line, symbol);
+			stripParens(line, symbol);
 			sprintf(val, "%d", line_number);
 			symbol_table = s_install(symbol_table, symbol, val);
 		} else if (type == '?') {
@@ -141,10 +163,10 @@ int first_pass() {
         }
     }
 	/*
-	struct symbol* x = symbol_table;
-	while (x != NULL) {
-		printf("%s %s\n", x->key, x->val);
-		x = x->next;
+	struct symbol* s = symbol_table;
+	while (s != NULL) {
+		printf("%s %s\n", s->key, s->val);
+		s = s->next;
 	}
 	*/
 } 
@@ -181,7 +203,7 @@ int second_pass() {
 }  
 
 int main() {
-    first_pass(); 		// this will be the symbol table
+    first_pass(); 		// the symbol table
 	rewind(stdin);
 	second_pass(); 		// actual binary translation
 }

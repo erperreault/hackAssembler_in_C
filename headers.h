@@ -4,4 +4,4 @@
 #include <ctype.h>
 #include <stddef.h>
 
-extern struct symbol* symbol_table;
+struct symbol* symbol_table;
