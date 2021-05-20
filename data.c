@@ -6,6 +6,19 @@ struct entry {
 	char* val;
 };
 
+/* Iterate over entries checking if a key matches mnemonic,
+ * then return associated val.
+ */
+char* lookup(struct entry table[], char* mnemonic) {
+	int i;
+
+	for (i=0; table[i].key != NULL; i++) {
+		if (!strcmp(mnemonic, table[i].key)) { 
+			return table[i].val;
+		}
+	}
+}
+
 /* This is technically the symbol table initialization, but our approach
  * handles the symbol table separately. Lookup involves checking this first
  * and then the symbol table.
