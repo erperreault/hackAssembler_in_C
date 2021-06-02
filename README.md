@@ -10,3 +10,8 @@ If you are interested in my learning process building this project, please see t
 * table.c -> Linked list data structure and functions for symbol table
 
 Testing is automated through test.sh. All sample programs and output references are in /programs.
+
+## Run it yourself
+* `git clone` this repository
+* In the base directory, `gcc assembler.c`
+* The resulting `a.out` file is your assembler. You can pass HACK assembly code to it with `./a.out << file.asm` and see the resulting binary in your terminal. To save the output to a file, `./a.out << file.asm >> output.hack`.
