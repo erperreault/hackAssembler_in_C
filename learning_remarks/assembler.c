@@ -9,7 +9,7 @@
  * simple distribution, with a manual installer and no desktop environment 
  * by default, yet it's famously difficult for novices to get running.
  * I think this is because "simplicity" in computer terms doesn't necessarily
- * translate to "easy to use". In fact it often requires more expertise.
+ * translate to "ease of use". In fact it often requires more expertise.
  * The less the system does for you, the more you need to know and understand
  * in order to direct it appropriately. A manual transmission in a car might be
  * "simple", but it demands more of the user. Of course there are tradeoffs
